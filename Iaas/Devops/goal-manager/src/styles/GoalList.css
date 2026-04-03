@@ -1,0 +1,88 @@
+/* GoalList Component Styles */
+
+.goals-container {
+  min-height: 300px;
+}
+
+.goals-header {
+  margin-bottom: 24px;
+}
+
+.goals-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.stat-box {
+  background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(255, 87, 34, 0.15);
+}
+
+.stat-count {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stat-box .stat-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.goals-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #999;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-text {
+  font-size: 16px;
+  margin: 0;
+  color: #666;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .goals-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-box {
+    padding: 16px;
+  }
+
+  .stat-count {
+    font-size: 24px;
+  }
+}

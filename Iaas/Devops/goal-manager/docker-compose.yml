@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  goal-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: goal-manager:latest
+    ports:
+      - "8080:80"
+    restart: unless-stopped

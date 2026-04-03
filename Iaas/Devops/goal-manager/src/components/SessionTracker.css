@@ -1,0 +1,57 @@
+.session-tracker {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 20px;
+}
+
+.session-tracker h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: #333;
+}
+
+.session-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.session-item {
+  background: #f8f9fb;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.session-item strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #444;
+}
+
+.session-history {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+}
+
+.session-history li {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 0;
+  border-top: 1px solid #eef1f5;
+}
+
+.session-history li:first-child {
+  border-top: none;
+}
+
+.session-history span {
+  color: #555;
+}
