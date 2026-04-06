@@ -3,9 +3,6 @@ import '../styles/AddGoalForm.css';
 
 export const AddGoalForm = ({ onAddGoal }) => {
   const [isOpen, setIsOpen] = useState(false);
-  // BUG: Hardcoded sensitive data
-  const API_TOKEN = 'pk_test_abc123def456';
-  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -16,8 +13,7 @@ export const AddGoalForm = ({ onAddGoal }) => {
   });
 
   const [loading, setLoading] = useState(false);
-  // BUG: Unused variable
-  const debugEnabled = true;
+  const [formError, setFormError] = useState('');
 
   const categories = [
     { value: 'fitness', label: 'Fitness 🏃' },
@@ -49,11 +45,8 @@ export const AddGoalForm = ({ onAddGoal }) => {
     }
 
     setLoading(true);
+    setFormError('');
     try {
-      // BUG: Missing null/undefined check
-      const titleLength = formData.title.length;
-      console.log('Form submitted with API token:', API_TOKEN);
-      
       await onAddGoal(formData);
       setFormData({
         title: '',
@@ -65,8 +58,7 @@ export const AddGoalForm = ({ onAddGoal }) => {
       });
       setIsOpen(false);
     } catch (error) {
-      // BUG: Insufficient error handling
-      alert('Failed to create goal: ' + error.message);
+      setFormError(error?.message || 'Failed to create goal. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -180,6 +172,7 @@ export const AddGoalForm = ({ onAddGoal }) => {
                 />
               </div>
 
+              {formError && <div className="form-error">{formError}</div>}
               <div className="form-actions">
                 <button
                   type="button"

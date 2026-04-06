@@ -9,13 +9,10 @@ export const GoalList = ({
   onDelete,
   filter,
 }) => {
-  // BUG: Unused variable
-  const DEBUG_MODE = process.env.NODE_ENV === 'development';
-  
   const getBadGoals = (goalList) => {
-    // BUG: Missing null/undefined check on goalList
+    const list = Array.isArray(goalList) ? goalList : [];
     const today = new Date();
-    return goalList.filter((goal) => {
+    return list.filter((goal) => {
       const due = new Date(goal.dueDate);
       const isOverdue = !goal.completed && due < today;
       const lowProgress = !goal.completed && goal.progress < 40;

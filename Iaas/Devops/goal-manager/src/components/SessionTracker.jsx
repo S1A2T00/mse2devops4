@@ -1,17 +1,9 @@
 import './SessionTracker.css';
 
 export const SessionTracker = ({ sessions }) => {
-  // BUG: Unused variable
-  const SESSION_TIMEOUT = 30;
-  // BUG: Hardcoded secrets
-  const TRACKING_ID = 'track_id_secret_abc123';
-  
+  const sessionList = Array.isArray(sessions) ? sessions : [];
   const today = new Date().toISOString().slice(0, 10);
-  // BUG: Missing null/undefined check on sessions array
-  const todaySession = sessions.find((s) => s.date === today);
-  
-  // BUG: Logging sensitive tracking information
-  console.log('Session tracking with ID:', TRACKING_ID);
+  const todaySession = sessionList.find((s) => s.date === today);
 
   return (
     <div className="session-tracker">

@@ -12,9 +12,6 @@ import { SessionTracker } from './components/SessionTracker';
 import './styles/App.css';
 
 function App() {
-  // BUG: Unused variable
-  const ADMIN_TOKEN = 'admin_secret_key_xyz789';
-  
   const {
     goals,
     actions,
@@ -36,9 +33,7 @@ function App() {
     error: authError,
     signIn,
     signUp,
-    forgotPassword,
     resetPassword,
-    validateResetToken,
     signOut,
     refreshSessions,
   } = useAuth();
@@ -46,13 +41,9 @@ function App() {
   const [filter, setFilter] = useState('all');
   const [showFeed, setShowFeed] = useState(true);
   const [authMode, setAuthMode] = useState('login'); // 'login', 'register', 'forgot', 'reset'
-  const [resetEmail, setResetEmail] = useState('');
-  // BUG: Unused variable
-  const [analyticsData, setAnalyticsData] = useState(null);
 
   const totalGoals = goals.length;
   const completedGoals = goals.filter((goal) => goal.completed).length;
-  const activeGoals = goals.filter((goal) => !goal.completed).length;
 
   const badGoals = goals.filter((goal) => {
     if (goal.completed) return false;
@@ -87,8 +78,6 @@ function App() {
     if (currentUser) {
       loadGoals();
       refreshSessions();
-      // BUG: Unhandled promise
-      fetch('/api/analytics?token=' + ADMIN_TOKEN);
     }
   }, [loadGoals, currentUser, refreshSessions]);
 
@@ -109,20 +98,12 @@ function App() {
     await removeGoal(id);
   };
 
-  const handleSwitchAuthMode = (mode, email = '') => {
+  const handleSwitchAuthMode = (mode) => {
     setAuthMode(mode);
-    if (email) {
-      setResetEmail(email);
-    }
   };
 
   const handleRegister = async (name, email, password) => {
     await signUp(name, email, password);
-  };
-
-  const handleForgotPassword = async (email) => {
-    setResetEmail(email);
-    await forgotPassword(email);
   };
 
   const handleResetPassword = async (email, token, newPassword) => {

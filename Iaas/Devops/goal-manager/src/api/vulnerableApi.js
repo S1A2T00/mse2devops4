@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, no-constant-condition, no-undef */
 // ⚠️ INTENTIONAL SECURITY FLAWS FOR SONARQUBE TESTING
 
 // 1. Hard-coded credentials (Security hotspot)

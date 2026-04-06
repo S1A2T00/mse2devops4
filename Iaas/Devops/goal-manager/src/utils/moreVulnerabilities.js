@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, no-undef, no-constant-condition */
 // ⚠️ MORE INTENTIONAL BUGS FOR SONARQUBE - Additional Issues
 
 // 1. Weak random number generation (not cryptographically secure)

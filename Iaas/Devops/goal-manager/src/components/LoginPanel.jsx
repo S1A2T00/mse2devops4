@@ -2,19 +2,11 @@ import { useState } from 'react';
 import './LoginPanel.css';
 
 export const LoginPanel = ({ onLogin, loading, error, onSwitchToRegister, onSwitchToForgotPassword }) => {
-  // BUG: Hardcoded credentials visible in default state
-  const [email, setEmail] = useState('alice@example.com');
-  const [password, setPassword] = useState('pass123');
-  
-  // BUG: Unused variable
-  const debugMode = true;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // BUG: Logging sensitive credentials
-    if (debugMode) {
-      console.log('Login attempt with credentials:', { email, password });
-    }
     await onLogin(email.trim(), password);
   };
 
@@ -73,8 +65,7 @@ export const LoginPanel = ({ onLogin, loading, error, onSwitchToRegister, onSwit
         </div>
 
         <p className="login-help">
-          {/* BUG: Hardcoded credentials exposed in UI */}
-          Demo users: alice@example.com / pass123, bob@example.com / pass123
+          Use your registered account to sign in.
         </p>
       </div>
     </div>

@@ -13,12 +13,10 @@ import {
 
 export const useAuth = () => {
   const [currentUser, setCurrentUser] = useState(getCurrentUser());
-  const [owner, setOwner] = useState(getOwnerInfo());
+  const [owner] = useState(getOwnerInfo());
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  // BUG: Unused variable
-  const [debugInfo, setDebugInfo] = useState({ userId: currentUser?.id, timestamp: new Date() });
 
   const refreshSessions = useCallback(() => {
     if (!currentUser) {

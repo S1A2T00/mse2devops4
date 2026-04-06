@@ -55,27 +55,27 @@ export const fetchGoals = async () => {
 
 // Create new goal
 export const createGoal = async (goalData) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      // BUG: SQL Injection vulnerability - string concatenation in query
-      const query = "SELECT * FROM goals WHERE title = '" + goalData.title + "'";
-      console.log('Executing query:', query);
-      
-      const newGoal = {
-        id: Date.now(),
-        ...goalData,
-        progress: 0,
-        completed: false,
-        current: 0,
-        createdAt: new Date(),
-      };
-      goalsData.push(newGoal);
-      localStorage.setItem('goals', JSON.stringify(goalsData));
-      
-      // Add action
-      addAction(`Created goal: "${goalData.title}"`);
-      
-      resolve(newGoal);
+      try {
+        const newGoal = {
+          id: Date.now(),
+          ...goalData,
+          progress: 0,
+          completed: false,
+          current: 0,
+          createdAt: new Date(),
+        };
+        goalsData.push(newGoal);
+        localStorage.setItem('goals', JSON.stringify(goalsData));
+
+        // Add action
+        addAction(`Created goal: "${goalData.title}"`);
+
+        resolve(newGoal);
+      } catch (error) {
+        reject(error);
+      }
     }, 300);
   });
 };
@@ -113,17 +113,19 @@ export const completeGoal = async (id) => {
 
 // Delete goal
 export const deleteGoal = async (id) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      const goal = goalsData.find((g) => g.id === id);
-      if (goal) {
-        addAction(`Deleted goal: "${goal.title}"`);
+      try {
+        const goal = goalsData.find((g) => g.id === id);
+        if (goal) {
+          addAction(`Deleted goal: "${goal.title}"`);
+        }
+        goalsData = goalsData.filter((g) => g.id !== id);
+        localStorage.setItem('goals', JSON.stringify(goalsData));
+        resolve(goal || null);
+      } catch (error) {
+        reject(error);
       }
-      goalsData = goalsData.filter((g) => g.id !== id);
-      localStorage.setItem('goals', JSON.stringify(goalsData));
-      // BUG: No error handling for storage failures
-      // BUG: Missing return statement
-      resolve();
     }, 300);
   });
 };

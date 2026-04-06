@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, no-undef */
 // ⚠️ INTENTIONAL BUGS FOR SONARQUBE TESTING - React Component Issues
 
 import React, { useState, useEffect } from 'react';
@@ -49,8 +50,8 @@ export function UnsafeComponent({ userData }) {
   // No check if userData exists
   return (
     <div>
-      <h1>{userData.profile.firstName}</h1> // Potential null reference
-      <p>{userData.address.street}</p>       // Potential null reference
+      <h1>{userData.profile.firstName}</h1>{/* Potential null reference */}
+      <p>{userData.address.street}</p>{/* Potential null reference */}
     </div>
   );
 }
@@ -111,7 +112,7 @@ export function NoErrorHandling() {
 
   return (
     <div>
-      {data.map(item => <p>{item}</p>)} // Will crash - no error boundary
+      {data.map(item => <p>{item}</p>)}{/* Will crash - no error boundary */}
     </div>
   );
 }

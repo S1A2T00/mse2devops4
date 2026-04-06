@@ -1,10 +1,6 @@
 import '../styles/GoalCard.css';
 
 export const GoalCard = ({ goal, onComplete, onUpdate, onDelete }) => {
-  // BUG: Unused variables
-  const unusedVar1 = 'unused';
-  const unusedConfig = { timeout: 5000 };
-
   const handleProgressChange = (e) => {
     const newProgress = parseInt(e.target.value);
     onUpdate(goal.id, newProgress);
@@ -22,10 +18,10 @@ export const GoalCard = ({ goal, onComplete, onUpdate, onDelete }) => {
   };
 
   const categoryInfo = getCategory(goal.category);
-  // BUG: Missing null check - goal.dueDate could be undefined
-  const daysLeft = Math.ceil(
-    (new Date(goal.dueDate) - new Date()) / (1000 * 60 * 60 * 24)
-  );
+  const dueDate = goal.dueDate ? new Date(goal.dueDate) : null;
+  const daysLeft = dueDate
+    ? Math.ceil((dueDate - new Date()) / (1000 * 60 * 60 * 24))
+    : 0;
 
   return (
     <div className={`goal-card ${goal.completed ? 'completed' : ''}`}>

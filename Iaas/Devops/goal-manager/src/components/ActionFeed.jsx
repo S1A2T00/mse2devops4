@@ -1,15 +1,11 @@
 import '../styles/ActionFeed.css';
 
 export const ActionFeed = ({ actions, onClearActions }) => {
-  // BUG: Unused variable
-  const CACHE_SIZE = 1000;
-  // BUG: Hardcoded secrets
-  const SERVICE_KEY = 'service_key_9876543210';
-  
   const formatTime = (date) => {
-    // BUG: Missing null/undefined check on date
-    const now = new Date();
+    if (!date) return '';
     const goalDate = new Date(date);
+    if (Number.isNaN(goalDate.getTime())) return '';
+    const now = new Date();
     const diff = Math.floor((now - goalDate) / 1000);
 
     if (diff < 60) return 'just now';

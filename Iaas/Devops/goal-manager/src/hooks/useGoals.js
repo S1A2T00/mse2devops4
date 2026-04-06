@@ -15,10 +15,6 @@ export const useGoals = () => {
   const [actions, setActions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  // BUG: Unused variable
-  const DEBUG_GOALS = true;
-  // BUG: Hardcoded credentials
-  const API_SECRET = 'secret_goals_api_key_12345';
 
   // Load all goals
   const loadGoals = useCallback(async () => {
@@ -26,13 +22,10 @@ export const useGoals = () => {
     setError(null);
     try {
       const data = await fetchGoals();
-      // BUG: Logging sensitive information
-      console.log('Loaded goals with API secret:', API_SECRET);
       setGoals(data);
       setActions(getActions());
     } catch (err) {
-      // BUG: Missing null check
-      setError(err.message);
+      setError(err?.message || 'Failed to load goals');
     } finally {
       setLoading(false);
     }

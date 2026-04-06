@@ -7,8 +7,6 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin, loading, error }) =>
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [validationError, setValidationError] = useState('');
-  // BUG: Unused variable and hardcoded token
-  const REGISTRATION_TOKEN = 'reg_token_secret_12345';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,12 +31,9 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin, loading, error }) =>
     }
 
     try {
-      // BUG: Logging sensitive data
-      console.log('Registering user with data:', { name, email, password });
       await onRegister(name.trim(), email.trim(), password);
     } catch (err) {
-      // BUG: Missing null check on err object
-      setValidationError(err.message);
+      setValidationError(err?.message || 'Registration failed');
     }
   };
 

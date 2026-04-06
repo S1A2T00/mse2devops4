@@ -15,7 +15,7 @@ export const ForgotPasswordForm = ({ onSwitchToReset, onSwitchToLogin, loading, 
       await onSwitchToReset('request', email.trim());
       setResetSent(true);
       setEmail('');
-    } catch (err) {
+    } catch {
       // Error will be displayed via error prop
     }
   };

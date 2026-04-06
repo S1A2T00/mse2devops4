@@ -14,18 +14,11 @@ const defaultUsers = [
   { id: 2, name: 'Bob', email: 'bob@example.com', password: 'pass123' },
 ];
 
-// BUG: Hardcoded API credentials
-const API_KEY = 'sk_live_51234567890abcdefghijk';
-const API_SECRET = 'sk_secret_9876543210zyxwvutsrq';
-const ADMIN_PASSWORD = 'admin@123secure!';
-const DB_USER = 'root';
-const DB_PASSWORD = 'root123456';
-
 const getUsers = () => {
   try {
     const raw = localStorage.getItem(usersKey);
     return raw ? JSON.parse(raw) : defaultUsers;
-  } catch (e) {
+  } catch {
     return defaultUsers;
   }
 };
@@ -40,7 +33,7 @@ const getSessions = () => {
   try {
     const raw = localStorage.getItem(sessionsKey);
     return raw ? JSON.parse(raw) : [];
-  } catch (e) {
+  } catch {
     return [];
   }
 };
@@ -53,7 +46,7 @@ export const getCurrentUser = () => {
   try {
     const raw = localStorage.getItem(userKey);
     return raw ? JSON.parse(raw) : null;
-  } catch (e) {
+  } catch {
     return null;
   }
 };
@@ -61,10 +54,6 @@ export const getCurrentUser = () => {
 export const loginUser = async (email, password) => {
   const users = getUsers();
   const user = users.find((u) => u.email === email && u.password === password);
-  // BUG: Logging sensitive information
-  console.log('User login attempt:', { email, password, user });
-  console.log('API Key in use:', API_KEY);
-  
   if (!user) {
     throw new Error('Invalid email or password');
   }
@@ -102,10 +91,6 @@ export const loginUser = async (email, password) => {
 
 export const logoutUser = async () => {
   const user = getCurrentUser();
-  // BUG: Missing null check - accessing properties without verification
-  const userId = user.id;
-  const userName = user.name;
-  
   if (!user) return;
 
   const sessions = getSessions();
@@ -219,24 +204,20 @@ export const requestPasswordReset = async (email) => {
 };
 
 export const validateResetToken = (email, token) => {
-  try {
-    const resets = JSON.parse(localStorage.getItem(passwordResetKey) || '[]');
-    const reset = resets.find((r) => r.email === email && r.token === token && !r.used);
-    
-    if (!reset) {
-      throw new Error('Invalid or expired reset token');
-    }
-
-    const now = new Date();
-    const expiry = new Date(reset.expiry);
-    if (now > expiry) {
-      throw new Error('Reset token has expired');
-    }
-
-    return true;
-  } catch (e) {
-    throw e;
+  const resets = JSON.parse(localStorage.getItem(passwordResetKey) || '[]');
+  const reset = resets.find((r) => r.email === email && r.token === token && !r.used);
+  
+  if (!reset) {
+    throw new Error('Invalid or expired reset token');
   }
+
+  const now = new Date();
+  const expiry = new Date(reset.expiry);
+  if (now > expiry) {
+    throw new Error('Reset token has expired');
+  }
+
+  return true;
 };
 
 export const resetPasswordWithToken = async (email, token, newPassword) => {
