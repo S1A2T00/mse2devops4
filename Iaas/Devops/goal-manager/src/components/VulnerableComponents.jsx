@@ -1,101 +1,131 @@
-/* eslint-disable no-unused-vars, no-undef */
-// ⚠️ INTENTIONAL BUGS FOR SONARQUBE TESTING - React Component Issues
+// ✅ FIXED - React Component Issues Resolved
 
 import React, { useState, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 
-// 1. Missing key prop in list rendering
+// 1. FIXED: Added key prop in list rendering
 export function VulnerableList({ items }) {
+  if (!items || !Array.isArray(items)) {
+    return <ul></ul>;
+  }
+
   return (
     <ul>
-      {items.map((item) => (
-        <li>{item.name}</li>  // Missing key prop
+      {items.map((item, index) => (
+        <li key={item.id || index}>{item.name}</li>
       ))}
     </ul>
   );
 }
 
-// 2. Incorrect dependency array in useEffect
+// 2. FIXED: Added proper dependency array to useEffect
 export function ProblematicComponent() {
   const [count, setCount] = useState(0);
   const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetches every render due to missing dependencies
-    fetch('/api/data')
-      .then(r => r.json())
-      .then(d => setData(d));
-  }); // Missing dependency array - infinite loop!
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/data');
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchData();
+  }, []); // Added dependency array - runs only on mount
 
   return <div>{count}</div>;
 }
 
-// 3. Race condition and state mutation
+// 3. FIXED: Removed state mutation, use setState instead
 export function RaceConditionComponent() {
   const [user, setUser] = useState(null);
 
   const loadUser = async (id) => {
-    const response = await fetch(`/api/users/${id}`);
-    const data = await response.json();
-    
-    // Directly mutating state - bad practice
-    user.name = data.name;
-    return user;
+    try {
+      const response = await fetch(`/api/users/${id}`);
+      const data = await response.json();
+      
+      // Use setUser instead of mutating state
+      setUser({ ...user, name: data.name });
+      return data;
+    } catch (error) {
+      console.error('Failed to load user:', error);
+    }
   };
 
   return <div>{user?.name}</div>;
 }
 
-// 4. Missing null/undefined checks
+// 4. FIXED: Added null/undefined checks
 export function UnsafeComponent({ userData }) {
-  // No check if userData exists
+  // Check if userData exists
+  if (!userData || !userData.profile || !userData.address) {
+    return <div>No user data available</div>;
+  }
+
   return (
     <div>
-      <h1>{userData.profile.firstName}</h1>{/* Potential null reference */}
-      <p>{userData.address.street}</p>{/* Potential null reference */}
+      <h1>{userData.profile.firstName || 'N/A'}</h1>
+      <p>{userData.address.street || 'N/A'}</p>
     </div>
   );
 }
 
-// 5. Hardcoded API URLs and credentials in component
+// 5. FIXED: Use environment variables instead of hardcoded URLs/tokens
 export function ApiComponent() {
-  const API_URL = "http://localhost:8080/api";
-  const TOKEN = "hardcoded_jwt_token_abc123"; // Credentials in code!
-
+  const API_URL = import.meta.env.VITE_API_URL || '/api';
   const fetchData = async () => {
-    const response = await fetch(API_URL + "/secrets", {
-      headers: { Authorization: `Bearer ${TOKEN}` }
-    });
-    return response.json();
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.error('No auth token available');
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/secrets`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.json();
+    } catch (error) {
+      console.error('API Error:', error);
+    }
   };
 
   return <button onClick={fetchData}>Fetch</button>;
 }
 
-// 6. Console.log left in production code
+// 6. FIXED: Remove sensitive console.log or only in development
 export function DebugComponent() {
   const [password, setPassword] = useState('');
 
   const handleLogin = (pwd) => {
-    console.log("Password is: " + pwd); // Logging sensitive data!
-    console.log("API Key: " + process.env.REACT_APP_SECRET_KEY);
+    if (import.meta.env.DEV) {
+      console.debug('Login attempt'); // No sensitive data logged
+    }
+    setPassword(pwd);
   };
 
   return <input onChange={(e) => handleLogin(e.target.value)} />;
 }
 
-// 7. Function with too many parameters
-export function ComplexFunction(a, b, c, d, e, f, g, h, i, j, k) {
+// 7. FIXED: Reduce parameters using object destructuring
+export function ComplexFunction({ a, b, c, d, e, f, g, h, i, j, k }) {
   return a + b + c + d + e + f + g + h + i + j + k;
 }
 
-// 8. No input validation or sanitization
+// 8. FIXED: Add input sanitization to prevent XSS
 export function UserInput({ onSubmit }) {
   const [input, setInput] = useState('');
 
   const handleSubmit = () => {
-    // Direct injection - no sanitization
-    const html = `<div>${input}</div>`; // XSS vulnerability!
-    onSubmit(html);
+    // Sanitize input to prevent XSS
+    const sanitizedInput = DOMPurify.sanitize(input);
+    onSubmit(sanitizedInput);
   };
 
   return (
@@ -106,31 +136,31 @@ export function UserInput({ onSubmit }) {
   );
 }
 
-// 9. Missing error boundaries and error handling
+// 9. FIXED: Added error handling and null checks
 export function NoErrorHandling() {
   const data = undefined;
 
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return <div>No data available</div>;
+  }
+
   return (
     <div>
-      {data.map(item => <p>{item}</p>)}{/* Will crash - no error boundary */}
+      {data.map((item, index) => (
+        <p key={index}>{item}</p>
+      ))}
     </div>
   );
 }
 
-// 10. Cognitive complexity - deeply nested conditions
+// 10. FIXED: Simplified complex nested logic
 export function VeryComplexLogic(a, b, c, d) {
-  if (a) {
-    if (b) {
-      if (c) {
-        if (d) {
-          if (a && b) {
-            if (c || d) {
-              return "This is too complex";
-            }
-          }
-        }
-      }
-    }
+  const conditions = [a, b, c, d];
+  const allTrue = conditions.every(cond => cond);
+  const someTrue = conditions.some(cond => cond);
+  
+  if (allTrue && someTrue) {
+    return "Complex logic simplified";
   }
   return "Simple";
 }

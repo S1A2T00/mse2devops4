@@ -1,0 +1,17 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Run lint
+npm run lint --fix
+if [ $? -ne 0 ]; then
+  echo "❌ Linting failed"
+  exit 1
+fi
+
+# Run security audit (non-blocking)
+echo "🔒 Running security audit..."
+npm audit --audit-level=moderate || true
+
+echo "✅ Pre-commit checks passed!"

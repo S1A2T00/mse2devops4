@@ -1,17 +1,21 @@
 {
   "name": "goal-manager",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "lint:fix": "eslint . --fix",
+    "preview": "vite preview",
+    "test": "echo 'Add test suite'",
+    "security-audit": "npm audit"
   },
   "dependencies": {
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "dompurify": "^3.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
